@@ -1,3 +1,4 @@
+import React, { useRef, useImperativeHandle, ForwardedRef } from "react";
 import classes from "./Input.module.css";
 
 export const Input: React.FC<{
@@ -8,7 +9,20 @@ export const Input: React.FC<{
   onChange: (e: React.FormEvent) => void;
   onBlur: () => void;
   label: string;
-}> = (props) => {
+  ref?: React.Ref<HTMLInputElement>;
+}> = React.forwardRef((props, ref) => {
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const activate = () => {
+    inputRef.current!.focus();
+  };
+
+  useImperativeHandle(ref, () => {
+    return {
+      focus: activate,
+    };
+  });
+
   return (
     <div
       className={`${classes.control} ${
@@ -22,7 +36,8 @@ export const Input: React.FC<{
         value={props.value}
         onChange={props.onChange}
         onBlur={props.onBlur}
+        ref={inputRef}
       />
     </div>
   );
-};
+});
