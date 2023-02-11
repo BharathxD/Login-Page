@@ -2,7 +2,13 @@ import React from "react";
 
 import classes from "./Button.module.css";
 
-const Button: React.FC<{ className: string; onClick: () => void; disabled: boolean; children: React.ReactNode; type: any}> = (props) => {
+const Button: React.FC<{
+  className: string;
+  onClick: () => void;
+  disabled: boolean;
+  children: React.ReactNode;
+  type: any;
+}> = (props) => {
   return (
     <button
       type={props.type || "button"}

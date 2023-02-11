@@ -1,13 +1,13 @@
-import React from 'react';
+import React from "react";
 
-import Navigation from './Navigation';
-import classes from './MainHeader.module.css';
+import Navigation from "./Navigation";
+import classes from "./MainHeader.module.css";
 
-const MainHeader: React.FC<{isAuthenticated: boolean; onLogout: () => void}> = (props) => {
+const MainHeader: React.FC = () => {
   return (
-    <header className={classes['main-header']}>
+    <header className={classes["main-header"]}>
       <h1>A Typical Page</h1>
-      <Navigation isLoggedIn={props.isAuthenticated} onLogout={props.onLogout} />
+      <Navigation />
     </header>
   );
 };

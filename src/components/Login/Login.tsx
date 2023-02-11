@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
+import AuthContext from "../Store/Auth-Context";
 
 interface reducerState {
   value: string;
@@ -23,10 +24,7 @@ const emailReducer = (state: reducerState, action: reducerAction) => {
   return { value: "", isValid: undefined };
 };
 
-const passwordReducer = (
-  state: reducerState,
-  action: reducerAction
-) => {
+const passwordReducer = (state: reducerState, action: reducerAction) => {
   if (action.type === "USER_PASSWORD") {
     return { value: action.value, isValid: action.value.trim().length > 6 };
   }
@@ -36,9 +34,9 @@ const passwordReducer = (
   return { value: "", isValid: undefined };
 };
 
-const Login: React.FC<{
-  onLogin: (email: string, password: string) => void;
-}> = (props) => {
+const Login: React.FC = () => {
+  const context = useContext(AuthContext);
+
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
     isValid: undefined,
@@ -97,7 +95,7 @@ const Login: React.FC<{
 
   const submitHandler = (event: React.FormEvent) => {
     event.preventDefault();
-    props.onLogin(emailState.value, passwordState.value);
+    context.onLogin(emailState.value, passwordState.value);
   };
 
   return (

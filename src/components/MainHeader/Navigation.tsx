@@ -3,9 +3,7 @@ import AuthContext from "../Store/Auth-Context";
 
 import classes from "./Navigation.module.css";
 
-const Navigation: React.FC<{ isLoggedIn: boolean; onLogout: () => void }> = (
-  props
-) => {
+const Navigation: React.FC = () => {
   const context = useContext(AuthContext);
   return (
     <nav className={classes.nav}>
@@ -22,7 +20,7 @@ const Navigation: React.FC<{ isLoggedIn: boolean; onLogout: () => void }> = (
         )}
         {context.isLoggedIn && (
           <li>
-            <button onClick={props.onLogout}>Logout</button>
+            <button onClick={context.onLogout}>Logout</button>
           </li>
         )}
       </ul>
