@@ -44,6 +44,7 @@
 .control.invalid input {
   border-color: red;
   background: #fbdada;
+  color: #000;
 }
 
 .actions {
