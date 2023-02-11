@@ -4,28 +4,28 @@ import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 
-interface emailReducerState {
+interface reducerState {
   value: string;
-  isValid: boolean;
+  isValid: boolean | undefined;
 }
-interface emailReducerAction {
+interface reducerAction {
   type: string;
   value: string;
 }
 
-const emailReducer = (state: emailReducerState, action: emailReducerAction) => {
+const emailReducer = (state: reducerState, action: reducerAction) => {
   if (action.type === "USER_INPUT") {
     return { value: action.value, isValid: action.value.includes("@") };
   }
   if (action.type === "INPUT_BLUR") {
     return { value: state.value, isValid: action.value.includes("@") };
   }
-  return { value: "", isValid: false };
+  return { value: "", isValid: undefined };
 };
 
 const passwordReducer = (
-  state: emailReducerState,
-  action: emailReducerAction
+  state: reducerState,
+  action: reducerAction
 ) => {
   if (action.type === "USER_PASSWORD") {
     return { value: action.value, isValid: action.value.trim().length > 6 };
@@ -33,7 +33,7 @@ const passwordReducer = (
   if (action.type === "INPUT_BLUR") {
     return { value: state.value, isValid: action.value.trim().length > 6 };
   }
-  return { value: "", isValid: false };
+  return { value: "", isValid: undefined };
 };
 
 const Login: React.FC<{
@@ -41,12 +41,12 @@ const Login: React.FC<{
 }> = (props) => {
   const [emailState, dispatchEmail] = useReducer(emailReducer, {
     value: "",
-    isValid: true,
+    isValid: undefined,
   });
 
   const [passwordState, dispatchPassword] = useReducer(passwordReducer, {
     value: "",
-    isValid: true,
+    isValid: undefined,
   });
 
   // const [enteredEmail, setEnteredEmail] = useState<string>("");
@@ -54,26 +54,30 @@ const Login: React.FC<{
   // const [enteredPassword, setEnteredPassword] = useState<string>("");
   // const [passwordIsValid, setPasswordIsValid] = useState<boolean>(true);
 
-  const [formIsValid, setFormIsValid] = useState<boolean>(false);
+  const [formIsValid, setFormIsValid] = useState<boolean | undefined>(false);
 
-  // useEffect(() => {
-  //   const identifier = setTimeout(() => {
-  //     setFormIsValid(emailState.isValid && enteredPassword.trim().length > 6);
-  // HTTP request
-  //   }, 1000);
-  //   return () => {
-  //     clearTimeout(identifier);
-  // It runs only after the dependency array changes
-  // So when user takes a pause, this won't run
-  //   };
-  // }, [emailState.value, enteredPassword]); // Only be run if any of these dependencies changes
+  // Never checks the validity again while using useEffect
+  // It is to optimize useEffect
+  const { isValid: emailIsValid } = emailState;
+  const { isValid: passwordIsValid } = passwordState;
+
+  useEffect(() => {
+    const identifier = setTimeout(() => {
+      setFormIsValid(emailIsValid && passwordIsValid);
+      // HTTP request
+    }, 500);
+    return () => {
+      clearTimeout(identifier);
+      // It runs only after the dependency array changes
+      // So when user takes a pause, this won't run
+    };
+  }, [emailIsValid, passwordIsValid]); // Only be run if any of these dependencies changes
 
   const emailChangeHandler = (event: React.FormEvent) => {
     dispatchEmail({
       type: "USER_INPUT",
       value: (event.target as HTMLInputElement).value,
     });
-    setFormIsValid(emailState.isValid && passwordState.isValid);
   };
 
   const passwordChangeHandler = (event: React.FormEvent) => {
@@ -88,7 +92,7 @@ const Login: React.FC<{
   };
 
   const validatePasswordHandler = () => {
-    dispatchPassword({type: "INPUT_BLUR", value: passwordState.value});
+    dispatchPassword({ type: "INPUT_BLUR", value: passwordState.value });
   };
 
   const submitHandler = (event: React.FormEvent) => {
