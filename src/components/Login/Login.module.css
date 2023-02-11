@@ -30,12 +30,15 @@
   padding: 0.35rem 0.35rem;
   border-radius: 6px;
   border: 1px solid #ccc;
+  color: #fff;
+  background-color: #464646;
 }
 
 .control input:focus {
   outline: none;
   border-color: #4f005f;
   background: #f6dbfc;
+  color: #000;
 }
 
 .control.invalid input {
