@@ -4,6 +4,7 @@ import Card from "../UI/Card/Card";
 import classes from "./Login.module.css";
 import Button from "../UI/Button/Button";
 import AuthContext from "../Store/Auth-Context";
+import { Input } from "./Input";
 
 interface reducerState {
   value: string;
@@ -70,6 +71,7 @@ const Login: React.FC = () => {
       // So when user takes a pause, this won't run
     };
   }, [emailIsValid, passwordIsValid]); // Only be run if any of these dependencies changes
+  //? Always add everything used in useEffect as a dependency array
 
   const emailChangeHandler = (event: React.FormEvent) => {
     dispatchEmail({
@@ -101,43 +103,25 @@ const Login: React.FC = () => {
   return (
     <Card className={classes.login}>
       <form onSubmit={submitHandler}>
-        <div
-          className={`${classes.control} ${
-            emailState.isValid === false ? classes.invalid : ""
-          }`}
-        >
-          <label htmlFor="email">E-Mail</label>
-          <input
-            type="email"
-            id="email"
-            value={emailState.value}
-            onChange={emailChangeHandler}
-            onBlur={validateEmailHandler}
-          />
-        </div>
-        <div
-          className={`${classes.control} ${
-            passwordState.isValid === false ? classes.invalid : ""
-          }`}
-        >
-          <label htmlFor="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            value={passwordState.value}
-            onChange={passwordChangeHandler}
-            onBlur={validatePasswordHandler}
-          />
-        </div>
+        <Input
+          type={"email"}
+          id={"email"}
+          label={"Email"}
+          isValid={emailIsValid}
+          onChange={emailChangeHandler}
+          onBlur={validateEmailHandler}
+        />
+        <Input
+          type={"password"}
+          id={"password"}
+          label={"Password"}
+          isValid={passwordIsValid}
+          value={passwordState.value}
+          onChange={passwordChangeHandler}
+          onBlur={validatePasswordHandler}
+        />
         <div className={classes.actions}>
-          <Button
-            type="submit"
-            className={classes.btn}
-            onClick={() => {
-              return;
-            }}
-            disabled={!formIsValid}
-          >
+          <Button type="submit" className={classes.btn} disabled={!formIsValid}>
             Login
           </Button>
         </div>
